@@ -1,0 +1,37 @@
+{
+  "builds": [
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-09918b03664cabec4",
+      "packer_run_uuid": "e38193d9-1e04-fd66-b60b-634bccd1f7bc",
+      "custom_data": {
+        "amazon_uuid": "1d36ebc9-58e7-4b68-8409-82e53955e6ed",
+        "rhel_uuid": "9396b63c-d875-46d3-a659-09f8596287ff"
+      }
+    },
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-0072a8d005ca94667",
+      "packer_run_uuid": "32776ab3-be45-b9e8-c14a-29967f8d3a2c",
+      "custom_data": {
+        "amazon_uuid": "236e7ded-101c-46bf-8031-1933d2c7fbbf",
+        "rhel_uuid": "11fe5a83-9041-4898-b35a-612c13272445"
+      }
+    },
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-0df61c16dd7bd6280",
+      "packer_run_uuid": "043c1916-ec07-48a9-4e90-0e6d1dce4460",
+      "custom_data": {
+        "centos_uuid": "d8b4a4d3-c529-4a8c-8784-20123d62ae69"
+      }
+    }
+  ],
+  "last_run_uuid": "043c1916-ec07-48a9-4e90-0e6d1dce4460"
+}
