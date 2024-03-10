@@ -33,8 +33,3 @@ resource "aws_autoscaling_group" "autoscale" {
     version = "$Latest"
   }
 }
-
-
-# output "dns" {
-#   value="${aws_launch_template.template}"
-# }
