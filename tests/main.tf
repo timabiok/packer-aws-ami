@@ -1,8 +1,8 @@
 resource "aws_launch_template" "template" {
   name_prefix   = "test"
-  image_id      = "ami-0df61c16dd7bd6280"
+  image_id      = "ami-03a9643c2c293ac1b"
   instance_type = "t2.micro"
-  key_name      = "ec2_centos_kp"
+  key_name      = "ec2_tim_abiok_kp" //ec2_centos_kp
   # vpc_security_group_ids = ["sg-06f7be65c3c3a3190"]
 
   network_interfaces {
