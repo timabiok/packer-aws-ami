@@ -31,7 +31,17 @@
       "custom_data": {
         "centos_uuid": "d8b4a4d3-c529-4a8c-8784-20123d62ae69"
       }
+    },
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-01e49e71905f994fe",
+      "packer_run_uuid": "26c27cd9-47dc-86c1-dd5e-2b6df2b9206b",
+      "custom_data": {
+        "centos_uuid": "0b717f0f-df14-4803-b4a1-cc72e5a65335"
+      }
     }
   ],
-  "last_run_uuid": "043c1916-ec07-48a9-4e90-0e6d1dce4460"
+  "last_run_uuid": "26c27cd9-47dc-86c1-dd5e-2b6df2b9206b"
 }
