@@ -53,7 +53,7 @@ build {
     ]
   }
 
-  name = "CentOS-Stream-9-build"
+  name = "centos-9-stream"
   sources = [
     "amazon-ebs.centos"
   ]

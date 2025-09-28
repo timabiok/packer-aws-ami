@@ -16,13 +16,13 @@ packer {
 }
 
 locals {
-  ports       = jsonencode(var.useful_ports)
-  centos_uuid = uuidv4()
-  region      = "us-east-1"
-  timestamp   = formatdate("YYYYMMDD__hhmmss", timestamp())
+  ports           = jsonencode(var.useful_ports)
+  servicenow_uuid = uuidv4()
+  region          = "us-east-1"
+  timestamp       = formatdate("YYYYMMDD__hhmmss", timestamp())
 }
 
-source "amazon-ebs" "centos" {
+source "amazon-ebs" "servicenow" {
   ami_name                    = "glide_rome_06_23_2021__patch5_hotfix1_${local.timestamp}"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
@@ -40,7 +40,7 @@ source "amazon-ebs" "centos" {
 
   source_ami_filter {
     filters = {
-      name                = "CentOS-*"
+      name                = "CentOS*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
       architecture        = "x86_64"
@@ -65,9 +65,9 @@ build {
     ]
   }
 
-  name = "glide_rome_06_23_2021__patch5_hotfix1_build"
+  name = "centos-9-stream"
   sources = [
-    "amazon-ebs.centos"
+    "amazon-ebs.servicenow"
   ]
 
   post-processor "manifest" {
