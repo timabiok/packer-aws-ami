@@ -23,7 +23,7 @@ locals {
 }
 
 source "amazon-ebs" "centos" {
-  ami_name                    = "glide-rome-06-23-2021__patch5-hotfix1-${local.timestamp}"
+  ami_name                    = "glide_rome_06_23_2021__patch5_hotfix1"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
   instance_type               = "t2.micro"
@@ -55,7 +55,7 @@ source "amazon-ebs" "centos" {
 build {
 
   provisioner "shell" {
-    script = "scripts/install.sh"
+    script = "servicenow/scripts/install.sh"
     environment_vars = [
       "BUCKET=${var.bucket}",
       "KEY=${var.key}",
@@ -65,7 +65,7 @@ build {
     ]
   }
 
-  name = "glide-rome-06-23-2021__patch5-hotfix1-build-${local.timestamp}"
+  name = "glide_rome_06_23_2021__patch5_hotfix1_build"
   sources = [
     "amazon-ebs.centos"
   ]

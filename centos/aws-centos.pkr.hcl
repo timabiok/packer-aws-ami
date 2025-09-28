@@ -15,7 +15,7 @@ locals {
 }
 
 source "amazon-ebs" "centos" {
-  ami_name                    = "CentOS-Stream-9-Base-${local.timestamp}"
+  ami_name                    = "CentOS_Stream_9_Base"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
   instance_type               = "t2.micro"
@@ -47,7 +47,7 @@ source "amazon-ebs" "centos" {
 build {
 
   provisioner "shell" {
-    script = "scripts/install.sh"
+    script = "centos/scripts/install.sh"
     environment_vars = [
       "REGION=${local.region}"
     ]
