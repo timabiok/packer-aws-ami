@@ -1,4 +1,4 @@
-name: Deploy Static Website to S3 with CloudFront
+name: Deploy Amazon Machine Image (AMI) to AWS
 
 on:
   push:

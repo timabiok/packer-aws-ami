@@ -34,7 +34,7 @@ sudo mkdir -p /opt/servicenow/
 sudo chmod 777 /opt/servicenow/
 
 # retrieving snow installation zip for s3
-/usr/local/bin/aws s3 cp s3://${BUCKET}/${KEY} /opt/servicenow/sn.zip
+/usr/local/bin/aws s3 cp s3://${BUCKET}/${KEY} /tmp/sn.zip
 
 # installing snow
 sudo useradd servicenow
@@ -42,7 +42,7 @@ SERVICE=""
 
 for PORT in "${PORTS[@]}"; do
 
-    sudo java -jar /opt/servicenow/*.zip --dst-dir /glide/nodes/sn_${PORT} install -n sn -p ${PORT}
+    sudo java -jar /tmp/*.zip --dst-dir /glide/nodes/sn_${PORT} install -n sn -p ${PORT}
     sudo chown -R servicenow:servicenow /glide/nodes/sn_${PORT}
 
     # Check if the number is less than 10
@@ -82,4 +82,4 @@ EOF
     sudo systemctl enable ${SERVICE}
 done
 
-sudo yum clean all && rm /opt/servicenow/*.zip
+sudo yum clean all && rm /tmp/*.zip
