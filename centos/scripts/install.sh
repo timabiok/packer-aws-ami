@@ -10,4 +10,9 @@ sudo systemctl enable amazon-ssm-agent
 sudo systemctl start amazon-ssm-agent
 
 sudo dnf install -y python3-pip
-sudo python3 -m pip install --user ansible
+python3 -m pip install --user ansible
+
+# echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
+# source ~/.bashrc
+
+ansible --version

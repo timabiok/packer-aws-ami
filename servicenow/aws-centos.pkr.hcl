@@ -19,11 +19,11 @@ locals {
   ports       = jsonencode(var.useful_ports)
   centos_uuid = uuidv4()
   region      = "us-east-1"
-  timestamp   = timestamp()
+  timestamp   = formatdate("YYYYMMDD__hhmmss", timestamp())
 }
 
 source "amazon-ebs" "centos" {
-  ami_name                    = "glide_rome_06_23_2021__patch5_hotfix1"
+  ami_name                    = "glide_rome_06_23_2021__patch5_hotfix1_${local.timestamp}"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
   instance_type               = "t2.micro"

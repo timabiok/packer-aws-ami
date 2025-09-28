@@ -10,12 +10,12 @@ packer {
 locals {
   centos_uuid = uuidv4()
   region      = "us-east-1"
-  timestamp   = timestamp() 
+  timestamp   = formatdate("YYYYMMDD__hhmmss", timestamp())
   
 }
 
 source "amazon-ebs" "centos" {
-  ami_name                    = "CentOS_Stream_9_Base"
+  ami_name                    = "CentOS_Stream_9_Base_${local.timestamp}"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
   instance_type               = "t2.micro"
@@ -53,7 +53,7 @@ build {
     ]
   }
 
-  name = "CentOS-Stream-9-build-${local.timestamp}"
+  name = "CentOS-Stream-9-build"
   sources = [
     "amazon-ebs.centos"
   ]
