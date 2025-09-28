@@ -75,7 +75,7 @@ build {
     strip_path = true
     strip_time = true
     custom_data = {
-      centos_uuid = "${local.centos_uuid}"
+      servicenow_uuid = "${local.servicenow_uuid}"
     }
   }
 }
