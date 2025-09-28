@@ -52,7 +52,6 @@ source "amazon-ebs" "centos" {
 build {
 
   provisioner "shell" {
-    # execute_command  = "sudo -S {{.Path}} {{.EnvVarFile}}"
     script = "scripts/install.sh"
     environment_vars = [
       "BUCKET=${var.bucket}",
@@ -75,5 +74,4 @@ build {
       centos_uuid = "${local.centos_uuid}"
     }
   }
-
 }

@@ -3,31 +3,31 @@
 set -e
 
 # routine maintenance
-sudo yum install -y -q --nogpgcheck tar util-linux wget zip unzip gcc which vim curl nano zsh jq
-sudo yum install -y -q $JAVA_INSTALLER glibc* glibc.i686 libgcc rng-tools
+# sudo yum install -y -q --nogpgcheck tar util-linux wget zip unzip gcc which vim curl nano zsh jq
+# sudo yum install -y -q $JAVA_INSTALLER glibc* glibc.i686 libgcc rng-tools
 
-PORTS=($(echo $JSON_PORTS | jq -r '.[]'))
+# PORTS=($(echo $JSON_PORTS | jq -r '.[]'))
 
-# set sysctl.conf as per sn recommendation
-sudo tee -a /etc/sysctl.d/99-sysctl.conf <<EOF
-vm.swappiness=1
-EOF
+# # set sysctl.conf as per sn recommendation
+# sudo tee -a /etc/sysctl.d/99-sysctl.conf <<EOF
+# vm.swappiness=1
+# EOF
 
-# set 20-nproc.conf as per sn recommendation
-sudo tee -a /etc/security/limits.d/20-nproc.conf <<EOF
-*          soft    nproc     10240
-EOF
+# # set 20-nproc.conf as per sn recommendation
+# sudo tee -a /etc/security/limits.d/20-nproc.conf <<EOF
+# *          soft    nproc     10240
+# EOF
 
-# set amb-sockets.conf as per sn recommendation
-sudo tee -a /etc/security/limits.d/amb-sockets.conf <<EOF
-*          soft    nofile     16000
-*          hard    nofile     16000
-EOF
+# # set amb-sockets.conf as per sn recommendation
+# sudo tee -a /etc/security/limits.d/amb-sockets.conf <<EOF
+# *          soft    nofile     16000
+# *          hard    nofile     16000
+# EOF
 
 # unset SELinux from enforcing per sn recommendation
-sudo tee /etc/selinux/config <<EOF
-SELINUX=permissive
-SELINUXTYPE=targeted
+# sudo tee /etc/selinux/config <<EOF
+# SELINUX=permissive
+# SELINUXTYPE=targeted
 EOF
 
 sudo mkdir -p /tmp/glide/
@@ -80,7 +80,6 @@ EOF
 
     sudo systemctl daemon-reload
     sudo systemctl enable $SERVICE
-
 done
 
 sudo yum clean all && rm /tmp/glide/*.zip
