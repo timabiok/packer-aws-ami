@@ -1,25 +1,30 @@
 # packer-aws-ami
 
-```sh
-packer fmt .      
+This repository contains a Packer HCL template to build an AWS CentOS AMI.
 
-```
+## Quick commands
 
-```sh
-packer validate .      
-
-```
+Format, validate and build the template using the explicit template filename so commands are unambiguous.
 
 ```sh
-packer build -var-file="variables.pkrvars.hcl" .
-packer build -debug aws-centos.pkr.hcl 
-ssh -i /path/key-pair-name.pem instance-user-name@instance-public-dns-name   
-```
+# format the template
+packer fmt aws-centos.pkr.hcl
 
-```sh
+# validate the template (optionally load the variables file)
+packer validate -var-file="variables.pkrvars.hcl" aws-centos.pkr.hcl
+
+# build the AMI (normal and debug)
+packer build -var-file="variables.pkrvars.hcl" aws-centos.pkr.hcl
+packer build -debug -var-file="variables.pkrvars.hcl" aws-centos.pkr.hcl
+
+# ssh into a provisioned instance (example)
+ssh -i /path/key-pair-name.pem instance-user-name@instance-public-dns-name
+
+# deregister an AMI
 aws ec2 deregister-image --image-id ami-*************
 ```
 
-```sh
-export AWS_PROFILE=nonprod
-```
+Notes:
+- Ensure AWS credentials and profile are configured (e.g. `export AWS_PROFILE=nonprod`).
+- Update `variables.pkrvars.hcl` if you need to change instance type, region, key pair, or other variables.
+- Run `packer validate` before `packer build` to catch template issues early.

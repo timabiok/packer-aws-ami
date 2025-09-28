@@ -41,7 +41,27 @@
       "custom_data": {
         "centos_uuid": "0b717f0f-df14-4803-b4a1-cc72e5a65335"
       }
+    },
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-067d65a2d8300dfd8",
+      "packer_run_uuid": "1722a915-13f2-8a87-7112-6cc70c3f67b5",
+      "custom_data": {
+        "centos_uuid": "14b56296-9ba0-4742-acfa-36dde1da99d6"
+      }
+    },
+    {
+      "name": "centos",
+      "builder_type": "amazon-ebs",
+      "files": null,
+      "artifact_id": "us-east-1:ami-0f80b8873d547003d",
+      "packer_run_uuid": "09702485-87f5-f0c6-b012-586ebf0c831b",
+      "custom_data": {
+        "centos_uuid": "56193403-a905-40b3-82ea-5cc7866a5eaf"
+      }
     }
   ],
-  "last_run_uuid": "26c27cd9-47dc-86c1-dd5e-2b6df2b9206b"
+  "last_run_uuid": "09702485-87f5-f0c6-b012-586ebf0c831b"
 }

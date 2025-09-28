@@ -18,16 +18,17 @@ packer {
 locals {
   ports       = jsonencode(var.useful_ports)
   centos_uuid = uuidv4()
+  region      = "us-east-1"
+  timestamp   = timestamp()
 }
 
 source "amazon-ebs" "centos" {
-  ami_name                    = "centos-rome-patch-1-glide"
+  ami_name                    = "glide-rome-06-23-2021__patch5-hotfix1-${local.timestamp}"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   region                      = "us-east-1"
-  // profile                     = "nonprod"
-  iam_instance_profile = "INSTANCESNOW"
+  iam_instance_profile        = "INSTANCESNOW"
   subnet_filter {
     filters = {
       "tag:Name" : "stingray-public-*"
@@ -39,14 +40,16 @@ source "amazon-ebs" "centos" {
 
   source_ami_filter {
     filters = {
-      name                = "Cent*"
+      name                = "CentOS-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
+      architecture        = "x86_64"
+      
     }
     most_recent = true
     owners      = ["775321136266"]
   }
-  ssh_username = "centos"
+  ssh_username = "ec2-user"
 }
 
 build {
@@ -57,11 +60,12 @@ build {
       "BUCKET=${var.bucket}",
       "KEY=${var.key}",
       "JSON_PORTS=${local.ports}",
-      "JAVA_INSTALLER=${var.java_installer}"
+      "JAVA_INSTALLER=${var.java_installer}",
+      "REGION=${local.region}"
     ]
   }
 
-  name = "centos-rome-release"
+  name = "glide-rome-06-23-2021__patch5-hotfix1-build-${local.timestamp}"
   sources = [
     "amazon-ebs.centos"
   ]
