@@ -44,6 +44,21 @@ source "amazon-ebs" "servicenow" {
     random    = false
   }
 
+  ami_block_device_mappings {
+    device_name           = "/dev/xvda"
+    volume_size           = 100
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
+
+
+  # root_block_device {
+  #   volume_size = 100     # Size in GB
+  #   volume_type = "gp3"
+  #   delete_on_termination = true
+  # }
+
+
   source_ami_filter {
     filters = {
       name                = local.source_ami_name
