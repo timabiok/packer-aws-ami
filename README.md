@@ -25,6 +25,7 @@ aws ec2 deregister-image --image-id ami-*************
 ```
 
 Notes:
+
 - Ensure AWS credentials and profile are configured (e.g. `export AWS_PROFILE=nonprod`).
 - Update `variables.pkrvars.hcl` if you need to change instance type, region, key pair, or other variables.
 - Run `packer validate` before `packer build` to catch template issues early.

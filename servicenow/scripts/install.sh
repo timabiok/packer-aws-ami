@@ -34,7 +34,7 @@ sudo mkdir -p /opt/servicenow/
 sudo chmod 777 /opt/servicenow/
 
 # retrieving snow installation zip for s3
-/usr/local/bin/aws s3 cp s3://${BUCKET}/${KEY} /tmp/sn.zip
+aws s3 cp s3://${BUCKET}/${KEY} /tmp/sn.zip
 
 # installing snow
 sudo useradd servicenow

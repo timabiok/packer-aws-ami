@@ -25,6 +25,7 @@ locals {
   owners               = ["775321136266"]
   ssh_username         = "ec2-user"
   source_ami_name      = "CentOS*"
+  root_volume_size     = 100
 
 }
 
@@ -44,20 +45,12 @@ source "amazon-ebs" "servicenow" {
     random    = false
   }
 
-  ami_block_device_mappings {
-    device_name           = "/dev/xvda"
-    volume_size           = 100
+  launch_block_device_mappings {
+    device_name           = "/dev/sda1"
+    volume_size           = local.root_volume_size
     volume_type           = "gp3"
     delete_on_termination = true
   }
-
-
-  # root_block_device {
-  #   volume_size = 100     # Size in GB
-  #   volume_type = "gp3"
-  #   delete_on_termination = true
-  # }
-
 
   source_ami_filter {
     filters = {
