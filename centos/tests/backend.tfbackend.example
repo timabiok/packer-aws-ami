@@ -1,4 +1,4 @@
-bucket         = "gruntlabs-tfstate"
-region         = "us-east-1"
-dynamodb_table = "terraform-locks"
-encrypt        = true
+bucket  = "gruntlabs"
+region  = "us-east-1"
+encrypt = true
+#dynamodb_table = "packer-aws-ami"

@@ -17,52 +17,10 @@ provider "aws" {
   region = var.region
 }
 
-variable "region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "ami_id" {
-  type        = string
-  description = "AMI ID of the CentOS base image to test"
-}
-
-variable "instance_type" {
-  type    = string
-  default = "t2.micro"
-}
-
-variable "key_name" {
-  type        = string
-  description = "EC2 key pair name"
-}
-
-variable "subnet_id" {
-  type        = string
-  description = "Subnet ID for the launch template"
-}
-
-variable "security_group_ids" {
-  type        = list(string)
-  description = "Security group IDs for the network interface"
-}
-
-variable "iam_instance_profile" {
-  type    = string
-  default = "INSTANCESNOW"
-}
-
 resource "aws_launch_template" "template" {
   name_prefix   = "centos-test-"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_name
-
-  network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = var.security_group_ids
-    subnet_id                   = var.subnet_id
-  }
 
   iam_instance_profile {
     name = var.iam_instance_profile
