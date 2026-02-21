@@ -1,71 +1,61 @@
 #!/bin/bash
-# sudo exec > /opt/userdata.log 2>&1
-set -e
+set -euo pipefail
 
-# routine maintenance
 sudo yum install -y -q --nogpgcheck tar util-linux wget zip unzip gcc which vim curl nano zsh jq
-sudo yum install -y -q ${JAVA_INSTALLER} glibc* glibc.i686 libgcc rng-tools
+sudo yum install -y -q "${JAVA_INSTALLER}" glibc* glibc.i686 libgcc rng-tools
 
-PORTS=($(echo ${JSON_PORTS} | jq -r '.[]'))
+PORTS=($(echo "${JSON_PORTS}" | jq -r '.[]'))
 
-# set sysctl.conf as per sn recommendation
 sudo tee -a /etc/sysctl.d/99-sysctl.conf <<EOF
 vm.swappiness=1
 EOF
 
-# set 20-nproc.conf as per sn recommendation
 sudo tee -a /etc/security/limits.d/20-nproc.conf <<EOF
 *          soft    nproc     10240
 EOF
 
-# set amb-sockets.conf as per sn recommendation
 sudo tee -a /etc/security/limits.d/amb-sockets.conf <<EOF
 *          soft    nofile     16000
 *          hard    nofile     16000
 EOF
 
-# unset SELinux from enforcing per sn recommendation
 sudo tee /etc/selinux/config <<EOF
 SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
 
-sudo mkdir -p /opt/servicenow/
-sudo chmod 777 /opt/servicenow/
+sudo mkdir -p /opt/servicenow
+sudo chmod 750 /opt/servicenow
 
-# retrieving snow installation zip for s3
-aws s3 cp s3://${BUCKET}/${KEY} /tmp/sn.zip
+aws s3 cp "s3://${BUCKET}/${KEY}" /tmp/sn.zip
 
-# installing snow
-sudo useradd servicenow
+sudo useradd servicenow || true
 SERVICE=""
 
 for PORT in "${PORTS[@]}"; do
 
-    sudo java -jar /tmp/*.zip --dst-dir /glide/nodes/sn_${PORT} install -n sn -p ${PORT}
-    sudo chown -R servicenow:servicenow /glide/nodes/sn_${PORT}
+    sudo java -jar /tmp/*.zip --dst-dir "/glide/nodes/sn_${PORT}" install -n sn -p "${PORT}"
+    sudo chown -R servicenow:servicenow "/glide/nodes/sn_${PORT}"
 
-    # Check if the number is less than 10
-    if [ $PORT -eq 8443 ]; then
+    if [ "${PORT}" -eq 8443 ]; then
         SERVICE="snc_8443.service"
         echo "Building ServiceNow UI NODE Service ${SERVICE} @ ${PORT}"
-    elif [ $PORT -eq 9443 ]; then
+    elif [ "${PORT}" -eq 9443 ]; then
         SERVICE="snc_9443.service"
         echo "Building ServiceNow WORKER NODE Service ${SERVICE} @ ${PORT}"
     fi
 
-    echo "completed glide script"
-    sudo touch /etc/systemd/system/${SERVICE}
+    echo "Completed glide script"
+    sudo touch "/etc/systemd/system/${SERVICE}"
 
-    sudo tee /etc/systemd/system/${SERVICE} <<EOF
-# ServiceNow SystemD start/stop script
+    sudo tee "/etc/systemd/system/${SERVICE}" <<EOF
 [Unit]
 Description=ServiceNow Tomcat Container
 After=syslog.target
 
 [Service]
 Type=forking
-Environment="JAVA_HOME=/usr
+Environment="JAVA_HOME=/usr"
 ExecStart=/glide/nodes/sn_${PORT}/startup.sh
 ExecStop=/glide/nodes/sn_${PORT}/shutdown.sh
 User=servicenow
@@ -79,7 +69,8 @@ WantedBy=multi-user.target
 EOF
 
     sudo systemctl daemon-reload
-    sudo systemctl enable ${SERVICE}
+    sudo systemctl enable "${SERVICE}"
 done
 
-sudo yum clean all && rm /tmp/*.zip
+sudo yum clean all
+rm -f /tmp/*.zip

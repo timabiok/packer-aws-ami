@@ -1,4 +1,0 @@
-tests/.terraform/*
-tests/terraform.tfstate.backup
-ec2_centos.pem
-

@@ -8,9 +8,9 @@ packer {
 }
 
 locals {
-  centos_uuid = uuidv4()
-  region      = "us-east-1"
-  timestamp   = formatdate("YYYYMMDD__hhmmss", timestamp())
+  centos_uuid          = uuidv4()
+  region               = "us-east-1"
+  timestamp            = formatdate("YYYYMMDD_hhmmss", timestamp())
   instance_type        = "t3.large"
   iam_instance_profile = "INSTANCESNOW"
   owners               = ["679593333241"]
@@ -25,11 +25,11 @@ source "amazon-ebs" "centos" {
   instance_type               = local.instance_type
   region                      = local.region
   iam_instance_profile        = local.iam_instance_profile
+
   subnet_filter {
     filters = {
       "tag:Name" : "stingray-public-*"
     }
-
     most_free = true
     random    = false
   }
@@ -40,15 +40,27 @@ source "amazon-ebs" "centos" {
       root-device-type    = "ebs"
       virtualization-type = "hvm"
       architecture        = "x86_64"
-      
     }
     most_recent = true
     owners      = local.owners
   }
+
   ssh_username = local.ssh_username
+
+  tags = {
+    Name       = "CentOS_Stream_9_Base_${local.timestamp}"
+    Base_AMI   = "CentOS-Stream-9"
+    Build_UUID = local.centos_uuid
+    Created_By = "Packer"
+  }
 }
 
 build {
+  name = "centos-9-stream"
+
+  sources = [
+    "amazon-ebs.centos"
+  ]
 
   provisioner "shell" {
     script = "centos/scripts/install.sh"
@@ -57,17 +69,12 @@ build {
     ]
   }
 
-  name = "centos-9-stream"
-  sources = [
-    "amazon-ebs.centos"
-  ]
-
   post-processor "manifest" {
     output     = "manifest.json"
     strip_path = true
     strip_time = true
     custom_data = {
-      centos_uuid = "${local.centos_uuid}"
+      centos_uuid = local.centos_uuid
     }
   }
 }

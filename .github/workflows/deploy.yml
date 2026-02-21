@@ -3,41 +3,67 @@ name: Deploy Amazon Machine Image (AMI) to AWS
 on:
   push:
     branches:
-      - main  # deploy only on master branch
+      - main
 
-# env:
-#   # Setting an environment variable with the value of a configuration variable
-#   env_var: ${{ vars.ENV_CONTEXT_VAR }}
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  build-centos:
+    name: Build CentOS Base AMI
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-          
-      # Step 3: Build CentOS Base AMI from CentOS Stream 
-      - name: Build CentOS Base AMI from CentOS Stream
-        run: |
-          packer init ./centos
-          packer build ./centos
 
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
 
-      # Step 3: Build ServiceNow Base from CentOS AMI
-      - name: Build ServiceNow Base from CentOS AMI
-        run: |
-          packer init ./servicenow
-          packer build -var-file=./servicenow/variables.pkrvars.hcl ./servicenow
+      - name: Packer init
+        run: packer init ./centos
 
-          
+      - name: Packer format check
+        run: packer fmt -check ./centos
 
+      - name: Packer validate
+        run: packer validate ./centos
+
+      - name: Packer build
+        run: packer build ./centos
+
+  build-servicenow:
+    name: Build ServiceNow AMI
+    needs: build-centos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Packer init
+        run: packer init ./servicenow
+
+      - name: Packer format check
+        run: packer fmt -check ./servicenow
+
+      - name: Packer validate
+        run: packer validate -var-file=./servicenow/variables.pkrvars.hcl ./servicenow
+
+      - name: Packer build
+        run: packer build -var-file=./servicenow/variables.pkrvars.hcl ./servicenow

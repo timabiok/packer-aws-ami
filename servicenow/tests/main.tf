@@ -1,32 +1,81 @@
-resource "aws_launch_template" "template" {
-  name_prefix   = "test"
-  image_id      = "ami-03a9643c2c293ac1b"
-  instance_type = "t2.micro"
-  key_name      = "ec2_tim_abiok_kp" //ec2_centos_kp
-  # vpc_security_group_ids = ["sg-06f7be65c3c3a3190"]
+terraform {
+  required_version = ">= 1.5"
 
-  network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = ["sg-06f7be65c3c3a3190"]
-    subnet_id                   = "subnet-0f3124553b76fcd46"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 
+  backend "s3" {
+    key = "packer-aws-ami/servicenow/tests/terraform.tfstate"
+  }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "ami_id" {
+  type        = string
+  description = "AMI ID of the ServiceNow image to test"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet ID for the autoscaling group"
+}
+
+variable "iam_instance_profile" {
+  type    = string
+  default = "INSTANCESNOW"
+}
+
+resource "aws_launch_template" "template" {
+  name_prefix   = "servicenow-test-"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+
   iam_instance_profile {
-    name = "INSTANCESNOW"
+    name = var.iam_instance_profile
   }
 
   user_data = filebase64("${path.module}/userdata.sh")
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "servicenow-test"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Name = "servicenow-test"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "autoscale" {
-  name                 = "test-autoscaling-group"
+  name                 = "servicenow-test-asg"
   desired_capacity     = 1
   max_size             = 1
   min_size             = 1
   health_check_type    = "EC2"
   termination_policies = ["OldestInstance"]
-  vpc_zone_identifier  = ["subnet-0f3124553b76fcd46", "subnet-0ad2590b8b177fde7", "subnet-0b9ed8367a72bd40a"]
-
+  vpc_zone_identifier  = [var.subnet_id]
 
   launch_template {
     id      = aws_launch_template.template.id
