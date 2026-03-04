@@ -33,10 +33,10 @@ jobs:
         run: packer fmt -check ./centos
 
       - name: Packer validate
-        run: packer validate ./centos
+        run: packer validate -var-file=./centos/variables.pkrvars.hcl ./centos
 
       - name: Packer build
-        run: packer build ./centos
+        run: packer build -var-file=./centos/variables.pkrvars.hcl ./centos
 
   build-servicenow:
     name: Build ServiceNow AMI

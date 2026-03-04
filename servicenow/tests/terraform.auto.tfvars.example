@@ -1,0 +1,5 @@
+region               = "us-east-1"
+ami_id               = "ami-XXXXXXXXXXXX"
+instance_type        = "t2.micro"
+subnet_id            = "subnet-XXXXXXXXXXXX"
+iam_instance_profile = "INSTANCESNOW"

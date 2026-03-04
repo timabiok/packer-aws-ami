@@ -9,16 +9,27 @@ Packer HCL templates for building AWS AMIs. This repo produces two images in a p
 
 ```
 .
-├── .github/workflows/deploy.yml   # CI/CD pipeline
+├── .github/workflows/deploy.yml        # CI/CD pipeline
 ├── centos/
-│   ├── aws-centos.pkr.hcl         # Packer template
-│   ├── scripts/install.sh          # Provisioning script
-│   └── tests/                      # Terraform smoke test
+│   ├── aws-centos.pkr.hcl              # Packer template
+│   ├── variables.pkr.hcl               # Variable declarations
+│   ├── variables.pkrvars.hcl            # Variable values
+│   ├── scripts/install.sh              # Provisioning script
+│   └── tests/
+│       ├── main.tf                     # Smoke test resources
+│       ├── variables.tf                # Variable declarations
+│       ├── terraform.auto.tfvars.example  # Example variable values (auto-loaded)
+│       └── backend.tfbackend.example      # Example S3 backend config
 ├── servicenow/
-│   ├── aws-servicenow.pkr.hcl     # Packer template
-│   ├── variables.pkrvars.hcl      # Build variables
-│   ├── scripts/install.sh          # Provisioning script
-│   └── tests/                      # Terraform smoke test
+│   ├── aws-servicenow.pkr.hcl             # Packer template
+│   ├── variables.pkr.hcl                  # Variable declarations
+│   ├── variables.pkrvars.hcl               # Variable values
+│   ├── scripts/install.sh                 # Provisioning script
+│   └── tests/
+│       ├── main.tf                        # Smoke test resources
+│       ├── variables.tf                   # Variable declarations
+│       ├── terraform.auto.tfvars.example  # Example variable values (auto-loaded)
+│       └── backend.tfbackend.example      # Example S3 backend config
 └── README.md
 ```
 
@@ -38,8 +49,8 @@ cd centos
 
 packer init .
 packer fmt -check .
-packer validate .
-packer build .
+packer validate -var-file=variables.pkrvars.hcl .
+packer build -var-file=variables.pkrvars.hcl .
 ```
 
 ### ServiceNow AMI
@@ -60,13 +71,13 @@ Each AMI has a Terraform configuration under `tests/` that launches an instance 
 ```sh
 cd centos/tests   # or servicenow/tests
 
-# Copy the example backend config and fill in your values
+# Copy example files and fill in your values
 cp backend.tfbackend.example backend.tfbackend
-
+cp terraform.auto.tfvars.example terraform.auto.tfvars
 # Initialize with your backend config
 terraform init -backend-config=backend.tfbackend
 
-terraform plan -var="ami_id=ami-XXXXXXXXXXXX" -var="key_name=my-key" -var="subnet_id=subnet-XXX" -var='security_group_ids=["sg-XXX"]'
+terraform plan
 terraform apply
 terraform destroy
 ```

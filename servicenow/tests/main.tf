@@ -17,31 +17,6 @@ provider "aws" {
   region = var.region
 }
 
-variable "region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "ami_id" {
-  type        = string
-  description = "AMI ID of the ServiceNow image to test"
-}
-
-variable "instance_type" {
-  type    = string
-  default = "t2.micro"
-}
-
-variable "subnet_id" {
-  type        = string
-  description = "Subnet ID for the autoscaling group"
-}
-
-variable "iam_instance_profile" {
-  type    = string
-  default = "INSTANCESNOW"
-}
-
 resource "aws_launch_template" "template" {
   name_prefix   = "servicenow-test-"
   image_id      = var.ami_id

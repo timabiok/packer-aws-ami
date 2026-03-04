@@ -8,27 +8,21 @@ packer {
 }
 
 locals {
-  centos_uuid          = uuidv4()
-  region               = "us-east-1"
-  timestamp            = formatdate("YYYYMMDD_hhmmss", timestamp())
-  instance_type        = "t3.large"
-  iam_instance_profile = "INSTANCESNOW"
-  owners               = ["679593333241"]
-  ssh_username         = "ec2-user"
-  source_ami_name      = "CentOS-Stream-9-*"
+  centos_uuid = uuidv4()
+  timestamp   = formatdate("YYYYMMDD_hhmmss", timestamp())
 }
 
 source "amazon-ebs" "centos" {
   ami_name                    = "CentOS_Stream_9_Base_${local.timestamp}"
   ami_virtualization_type     = "hvm"
   associate_public_ip_address = true
-  instance_type               = local.instance_type
-  region                      = local.region
-  iam_instance_profile        = local.iam_instance_profile
+  instance_type               = var.instance_type
+  region                      = var.region
+  iam_instance_profile        = var.iam_instance_profile
 
   subnet_filter {
     filters = {
-      "tag:Name" : "stingray-public-*"
+      "tag:Name" : var.subnet_filter_name
     }
     most_free = true
     random    = false
@@ -36,16 +30,16 @@ source "amazon-ebs" "centos" {
 
   source_ami_filter {
     filters = {
-      name                = local.source_ami_name
+      name                = var.source_ami_name
       root-device-type    = "ebs"
       virtualization-type = "hvm"
       architecture        = "x86_64"
     }
     most_recent = true
-    owners      = local.owners
+    owners      = var.source_ami_owners
   }
 
-  ssh_username = local.ssh_username
+  ssh_username = var.ssh_username
 
   tags = {
     Name       = "CentOS_Stream_9_Base_${local.timestamp}"
@@ -65,7 +59,7 @@ build {
   provisioner "shell" {
     script = "centos/scripts/install.sh"
     environment_vars = [
-      "REGION=${local.region}"
+      "REGION=${var.region}"
     ]
   }
 

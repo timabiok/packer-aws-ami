@@ -16,6 +16,7 @@ manifest.json
 # Terraform
 *.tfbackend
 !*.tfbackend.example
+**/tests/terraform.auto.tfvars
 .terraform/
 *.tfstate
 *.tfstate.backup
