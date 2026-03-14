@@ -20,9 +20,11 @@ source "amazon-ebs" "centos" {
   region                      = var.region
   iam_instance_profile        = var.iam_instance_profile
 
+  subnet_id            = var.subnet_id
+  security_group_ids   = length(var.security_group_ids) > 0 ? var.security_group_ids : null
   subnet_filter {
     filters = {
-      "tag:Name" : var.subnet_filter_name
+      "tag:Name" : var.subnet_filter_name != null ? var.subnet_filter_name : "*"
     }
     most_free = true
     random    = false

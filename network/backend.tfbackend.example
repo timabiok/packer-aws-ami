@@ -1,0 +1,4 @@
+bucket  = "your-terraform-state-bucket"
+region  = "us-east-1"
+encrypt = true
+# key is set in versions.tf: packer-aws-ami/network/terraform.tfstate

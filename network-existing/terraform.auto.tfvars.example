@@ -1,0 +1,4 @@
+region                    = "us-east-1"
+existing_vpc_id            = "vpc-xxxxxxxxx"
+existing_subnet_ids        = ["subnet-xxxxxxxxx"]
+existing_security_group_ids = ["sg-xxxxxxxxx"]

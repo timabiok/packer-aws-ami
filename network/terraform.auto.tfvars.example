@@ -1,0 +1,7 @@
+# Create VPC via terraform-aws-vpc module. For existing IDs use network-existing/ instead.
+region             = "us-east-1"
+env                = "dev"
+app                = "packer-ami"
+owner              = "platform"
+vpc_cidr           = "10.0.0.0/16"
+single_nat_gateway = true

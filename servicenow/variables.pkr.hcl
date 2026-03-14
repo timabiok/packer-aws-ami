@@ -28,9 +28,22 @@ variable "source_ami_name" {
   description = "Name filter pattern for the source AMI"
 }
 
+variable "subnet_id" {
+  type        = string
+  default     = null
+  description = "Subnet ID for build instance. When set, overrides subnet_filter. Use network Terraform output build_subnet_id when using the repo's network layer."
+}
+
 variable "subnet_filter_name" {
   type        = string
-  description = "Tag:Name filter pattern for subnet selection"
+  default     = null
+  description = "Tag:Name filter pattern for subnet selection (used only when subnet_id is not set)"
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "Security group IDs for the build instance. Use network output build_security_group_ids when using the repo's network layer."
 }
 
 variable "root_volume_size" {

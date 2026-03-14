@@ -4,7 +4,7 @@ instance_type        = "t2.micro"
 iam_instance_profile = "INSTANCESNOW"
 
 # Option 1: Use network layer state (run network/ apply first, same S3 backend)
-use_network_state     = true
+use_network_state      = true
 terraform_state_bucket = "your-terraform-state-bucket"
 
 # Option 2: Pass IDs directly (set use_network_state = false)
