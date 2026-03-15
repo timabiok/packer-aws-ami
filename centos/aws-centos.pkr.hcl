@@ -58,6 +58,11 @@ build {
     "amazon-ebs.centos"
   ]
 
+  provisioner "file" {
+    source      = "centos/scripts/dnf-automatic.conf"
+    destination = "/tmp/dnf-automatic.conf"
+  }
+
   provisioner "shell" {
     script = "centos/scripts/install.sh"
     environment_vars = [
